@@ -69,9 +69,14 @@ ScaffoldingReadMe.txt
 *.sqlite
 *.sqlite3
 
-# Environment and Configuration
+# Environment and Configuration (CRITICAL: Never commit with real secrets)
 appsettings.Development.json
+appsettings.Production.json
+appsettings.Staging.json
 appsettings.Local.json
+appsettings.*.json
+!appsettings.json
+!appsettings.Example.json
 *.env
 .env
 .env.local
@@ -123,3 +128,4 @@ docker-compose.override.yml
 
 # Documentation (Markdown files)
 *.md
+!README.md
