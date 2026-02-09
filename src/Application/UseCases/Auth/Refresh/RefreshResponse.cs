@@ -1,8 +1,6 @@
-namespace JuliGastos.Application.UseCases.Auth.Register;
+namespace JuliGastos.Application.UseCases.Auth.Refresh;
 
-public record RegisterResponse(
-    string Email,
-    string FullName,
+public record RefreshResponse(
     string AccessToken,
     string RefreshToken,
     DateTimeOffset AccessTokenExpiresAt,

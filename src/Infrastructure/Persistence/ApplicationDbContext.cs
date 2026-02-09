@@ -15,6 +15,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<Account> Accounts => Set<Account>();
     public DbSet<Category> Categories => Set<Category>();
     public DbSet<Transaction> Transactions => Set<Transaction>();
+    public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -136,6 +137,65 @@ public class ApplicationDbContext : DbContext
             
             // Índice único para UUID
             entity.HasIndex(e => e.Uuid).IsUnique();
+        });
+
+        // Configuración de RefreshToken
+        modelBuilder.Entity<RefreshToken>(entity =>
+        {
+            entity.ToTable("refresh_tokens");
+            
+            entity.HasKey(e => e.Id);
+            
+            entity.Property(e => e.Id)
+                .HasColumnName("id")
+                .ValueGeneratedOnAdd();
+            
+            entity.Property(e => e.Token)
+                .HasColumnName("token")
+                .HasMaxLength(100)
+                .IsRequired();
+            
+            entity.Property(e => e.UserId)
+                .HasColumnName("user_id")
+                .IsRequired();
+            
+            entity.Property(e => e.CreatedAt)
+                .HasColumnName("created_at")
+                .HasDefaultValueSql("CURRENT_TIMESTAMP");
+            
+            entity.Property(e => e.ExpiresAt)
+                .HasColumnName("expires_at")
+                .IsRequired();
+            
+            entity.Property(e => e.IsRevoked)
+                .HasColumnName("is_revoked")
+                .HasDefaultValue(false);
+            
+            entity.Property(e => e.RevokedAt)
+                .HasColumnName("revoked_at");
+            
+            entity.Property(e => e.IpAddress)
+                .HasColumnName("ip_address")
+                .HasMaxLength(45);
+            
+            entity.Property(e => e.UserAgent)
+                .HasColumnName("user_agent")
+                .HasMaxLength(500);
+            
+            entity.Property(e => e.ReplacedByToken)
+                .HasColumnName("replaced_by_token")
+                .HasMaxLength(100);
+            
+            // FK a User
+            entity.HasOne<User>()
+                .WithMany()
+                .HasForeignKey(e => e.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+            
+            // Índices
+            entity.HasIndex(e => e.Token).IsUnique();
+            entity.HasIndex(e => e.UserId);
+            entity.HasIndex(e => e.ExpiresAt);
         });
     }
 }

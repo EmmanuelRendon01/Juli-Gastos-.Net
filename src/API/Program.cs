@@ -1,4 +1,5 @@
 using System.Text;
+using JuliGastos.API.BackgroundServices;
 using JuliGastos.Application.Interfaces.Repositories;
 using JuliGastos.Application.Interfaces.Services;
 using JuliGastos.Infrastructure.Persistence;
@@ -72,14 +73,20 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 // Repositories
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
+builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 
 // Services
 builder.Services.AddScoped<IPasswordHasher, BcryptPasswordHasher>();
 builder.Services.AddScoped<ITokenService, JwtTokenService>();
 
+// Background Services
+builder.Services.AddHostedService<RefreshTokenCleanupService>();
+
 // UseCases/Handlers - Auth
 builder.Services.AddScoped<JuliGastos.Application.UseCases.Auth.Register.RegisterHandler>();
 builder.Services.AddScoped<JuliGastos.Application.UseCases.Auth.Login.LoginHandler>();
+builder.Services.AddScoped<JuliGastos.Application.UseCases.Auth.Refresh.RefreshHandler>();
+builder.Services.AddScoped<JuliGastos.Application.UseCases.Auth.Logout.LogoutHandler>();
 
 // UseCases/Handlers - Account
 builder.Services.AddScoped<JuliGastos.Application.UseCases.Account.Create.CreateAccountHandler>();

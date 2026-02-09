@@ -4,5 +4,8 @@ public record LoginResponse(
     long UserId,
     string Email,
     string FullName,
-    string Token
+    string AccessToken,
+    string RefreshToken,
+    DateTimeOffset AccessTokenExpiresAt,
+    DateTimeOffset RefreshTokenExpiresAt
 );
