@@ -38,6 +38,7 @@ public class RegisterHandler
             Uuid = Guid.NewGuid(),
             Email = command.Email.ToLowerInvariant(), // Normalizar email
             PasswordHash = passwordHash,
+            FullName = command.FullName,
             Role = "User", // Rol por defecto
             CurrencyCode = command.CurrencyCode,
             EmergencyFundMonths = command.EmergencyFundMonths,
