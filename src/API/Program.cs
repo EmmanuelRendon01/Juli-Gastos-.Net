@@ -42,14 +42,20 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 // Repositories
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 
 // Services
 builder.Services.AddScoped<IPasswordHasher, BcryptPasswordHasher>();
 builder.Services.AddScoped<ITokenService, JwtTokenService>();
 
-// UseCases/Handlers
+// UseCases/Handlers - Auth
 builder.Services.AddScoped<JuliGastos.Application.UseCases.Auth.Register.RegisterHandler>();
 builder.Services.AddScoped<JuliGastos.Application.UseCases.Auth.Login.LoginHandler>();
+
+// UseCases/Handlers - Account
+builder.Services.AddScoped<JuliGastos.Application.UseCases.Account.Create.CreateAccountHandler>();
+builder.Services.AddScoped<JuliGastos.Application.UseCases.Account.GetAll.GetAllAccountsHandler>();
+builder.Services.AddScoped<JuliGastos.Application.UseCases.Account.GetById.GetAccountByIdHandler>();
 
 var app = builder.Build();
 

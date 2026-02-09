@@ -5,6 +5,7 @@ namespace JuliGastos.Domain.Models;
 public class Account
 {
     public long Id { get; set; }
+    public Guid Uuid { get; set; }
     public long UserId { get; set; }
     public string Name { get; set; } = string.Empty;
     public AccountType Type { get; set; }

@@ -2,7 +2,8 @@ namespace JuliGastos.Domain.Exceptions;
 
 public class AccountNotFoundException : Exception
 {
-    public AccountNotFoundException(string message) : base(message)
+    public AccountNotFoundException(Guid uuid) 
+        : base($"Account with UUID {uuid} not found")
     {
     }
 }

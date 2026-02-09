@@ -71,5 +71,71 @@ public class ApplicationDbContext : DbContext
             entity.HasIndex(e => e.Uuid).IsUnique();
             entity.HasIndex(e => e.Email).IsUnique();
         });
+
+        // Configuración de Account
+        modelBuilder.Entity<Account>(entity =>
+        {
+            entity.ToTable("accounts");
+            
+            entity.HasKey(e => e.Id);
+            
+            entity.Property(e => e.Id)
+                .HasColumnName("id")
+                .ValueGeneratedOnAdd();
+            
+            entity.Property(e => e.Uuid)
+                .HasColumnName("uuid")
+                .IsRequired()
+                .HasDefaultValueSql("uuid_generate_v4()");
+            
+            entity.Property(e => e.UserId)
+                .HasColumnName("user_id")
+                .IsRequired();
+            
+            entity.Property(e => e.Name)
+                .HasColumnName("name")
+                .HasMaxLength(100)
+                .IsRequired();
+            
+            entity.Property(e => e.Type)
+                .HasColumnName("type")
+                .HasConversion<string>()
+                .IsRequired();
+            
+            entity.Property(e => e.CurrencyCode)
+                .HasColumnName("currency_code")
+                .HasMaxLength(3)
+                .HasDefaultValue("COP");
+            
+            entity.Property(e => e.CurrentBalance)
+                .HasColumnName("current_balance")
+                .HasPrecision(19, 4)
+                .HasDefaultValue(0.0000m);
+            
+            entity.Property(e => e.MonthlyMaintenanceFee)
+                .HasColumnName("monthly_maintenance_fee")
+                .HasPrecision(19, 4)
+                .HasDefaultValue(0.00m);
+            
+            entity.Property(e => e.CreatedAt)
+                .HasColumnName("created_at")
+                .HasDefaultValueSql("CURRENT_TIMESTAMP");
+            
+            entity.Property(e => e.IsActive)
+                .HasColumnName("is_active")
+                .HasDefaultValue(true);
+            
+            // Relación con User (FK)
+            entity.HasOne<User>()
+                .WithMany()
+                .HasForeignKey(e => e.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+            
+            // Índice para búsquedas por usuario
+            entity.HasIndex(e => e.UserId);
+            
+            // Índice único para UUID
+            entity.HasIndex(e => e.Uuid).IsUnique();
+        });
     }
 }
