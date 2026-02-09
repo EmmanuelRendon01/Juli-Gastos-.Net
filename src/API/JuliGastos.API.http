@@ -1,0 +1,6 @@
+@JuliGastos.API_HostAddress = http://localhost:5116
+
+GET {{JuliGastos.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

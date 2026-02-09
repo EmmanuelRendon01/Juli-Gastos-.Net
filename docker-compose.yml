@@ -1,0 +1,16 @@
+services:
+  db:
+
+    image: postgres:16
+    container_name: juligastos-app
+    environment:
+      POSTGRES_DB: juligastos
+      POSTGRES_USER: juligastos
+      POSTGRES_PASSWORD: juligastos
+    ports:
+      - "5433:5432"
+    volumes:
+      - juligastos_v16_data:/var/lib/postgresql/data
+
+volumes:
+  juligastos_v16_data:
