@@ -4,3 +4,30 @@ GET {{JuliGastos.API_HostAddress}}/weatherforecast/
 Accept: application/json
 
 ###
+
+# Auth Endpoints
+
+### Register User
+POST {{JuliGastos.API_HostAddress}}/api/auth/register
+Content-Type: application/json
+
+{
+  "email": "test@example.com",
+  "password": "password123",
+  "fullName": "Test User",
+  "currencyCode": "COP",
+  "emergencyFundMonths": 3
+}
+
+###
+
+### Login User
+POST {{JuliGastos.API_HostAddress}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "test@example.com",
+  "password": "password123"
+}
+
+###

@@ -49,6 +49,7 @@ builder.Services.AddScoped<ITokenService, JwtTokenService>();
 
 // UseCases/Handlers
 builder.Services.AddScoped<JuliGastos.Application.UseCases.Auth.Register.RegisterHandler>();
+builder.Services.AddScoped<JuliGastos.Application.UseCases.Auth.Login.LoginHandler>();
 
 var app = builder.Build();
 
