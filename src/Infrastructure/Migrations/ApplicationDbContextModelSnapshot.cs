@@ -84,7 +84,7 @@ namespace JuliGastos.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
                         .HasColumnName("uuid")
-                        .HasDefaultValueSql("uuid_generate_v4()");
+                        .HasDefaultValueSql("gen_random_uuid()");
 
                     b.HasKey("Id");
 
@@ -303,7 +303,7 @@ namespace JuliGastos.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
                         .HasColumnName("uuid")
-                        .HasDefaultValueSql("uuid_generate_v4()");
+                        .HasDefaultValueSql("gen_random_uuid()");
 
                     b.HasKey("Id");
 

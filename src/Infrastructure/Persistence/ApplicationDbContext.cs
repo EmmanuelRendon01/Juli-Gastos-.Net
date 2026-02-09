@@ -35,7 +35,7 @@ public class ApplicationDbContext : DbContext
             entity.Property(e => e.Uuid)
                 .HasColumnName("uuid")
                 .IsRequired()
-                .HasDefaultValueSql("uuid_generate_v4()");
+                .HasDefaultValueSql("gen_random_uuid()");
             
             entity.Property(e => e.Email)
                 .HasColumnName("email")
@@ -87,7 +87,7 @@ public class ApplicationDbContext : DbContext
             entity.Property(e => e.Uuid)
                 .HasColumnName("uuid")
                 .IsRequired()
-                .HasDefaultValueSql("uuid_generate_v4()");
+                .HasDefaultValueSql("gen_random_uuid()");
             
             entity.Property(e => e.UserId)
                 .HasColumnName("user_id")

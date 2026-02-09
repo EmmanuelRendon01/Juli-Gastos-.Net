@@ -8,7 +8,7 @@ public class Transaction
 {
     public long Id {get; set;}
     public long UserId{get; set;}
-    public long AccountId{get; set;}
+    public Guid AccountId{get; set;}
     public long CategoryId;
     public TransactionType Type {get; set;}
     public decimal Amount {get; set;}
