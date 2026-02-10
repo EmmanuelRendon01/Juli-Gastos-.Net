@@ -26,117 +26,450 @@ namespace JuliGastos.Infrastructure.Migrations
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .HasColumnType("bigint")
+                        .HasColumnName("id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
                     b.Property<DateTimeOffset>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.Property<string>("CurrencyCode")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(3)
+                        .HasColumnType("character varying(3)")
+                        .HasDefaultValue("COP")
+                        .HasColumnName("currency_code");
 
                     b.Property<decimal>("CurrentBalance")
-                        .HasColumnType("numeric");
+                        .ValueGeneratedOnAdd()
+                        .HasPrecision(19, 4)
+                        .HasColumnType("numeric(19,4)")
+                        .HasDefaultValue(0.0000m)
+                        .HasColumnName("current_balance");
 
                     b.Property<bool>("IsActive")
-                        .HasColumnType("boolean");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(true)
+                        .HasColumnName("is_active");
 
                     b.Property<decimal>("MonthlyMaintenanceFee")
-                        .HasColumnType("numeric");
+                        .ValueGeneratedOnAdd()
+                        .HasPrecision(19, 4)
+                        .HasColumnType("numeric(19,4)")
+                        .HasDefaultValue(0.00m)
+                        .HasColumnName("monthly_maintenance_fee");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("name");
 
-                    b.Property<int>("Type")
-                        .HasColumnType("integer");
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("type");
 
                     b.Property<long>("UserId")
-                        .HasColumnType("bigint");
+                        .HasColumnType("bigint")
+                        .HasColumnName("user_id");
+
+                    b.Property<Guid>("Uuid")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("uuid")
+                        .HasDefaultValueSql("gen_random_uuid()");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Accounts");
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("Uuid")
+                        .IsUnique();
+
+                    b.ToTable("accounts", (string)null);
                 });
 
             modelBuilder.Entity("JuliGastos.Domain.Models.Category", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .HasColumnType("bigint")
+                        .HasColumnName("id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
                     b.Property<string>("Color")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(7)
+                        .HasColumnType("character varying(7)")
+                        .HasDefaultValue("#6366F1")
+                        .HasColumnName("color");
 
                     b.Property<string>("Icon")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasDefaultValue("💰")
+                        .HasColumnName("icon");
 
                     b.Property<bool>("IsSystemDefault")
-                        .HasColumnType("boolean");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false)
+                        .HasColumnName("is_system_default");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("name");
 
-                    b.Property<int>("Type")
-                        .HasColumnType("integer");
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("type");
 
-                    b.Property<long>("UserId")
-                        .HasColumnType("bigint");
+                    b.Property<long?>("UserId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("user_id");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories");
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("UserId", "Name")
+                        .IsUnique();
+
+                    b.ToTable("categories", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1L,
+                            Color = "#10B981",
+                            Icon = "🍔",
+                            IsSystemDefault = true,
+                            Name = "Alimentación",
+                            Type = "Expense"
+                        },
+                        new
+                        {
+                            Id = 2L,
+                            Color = "#3B82F6",
+                            Icon = "🚗",
+                            IsSystemDefault = true,
+                            Name = "Transporte",
+                            Type = "Expense"
+                        },
+                        new
+                        {
+                            Id = 3L,
+                            Color = "#F59E0B",
+                            Icon = "🏠",
+                            IsSystemDefault = true,
+                            Name = "Vivienda",
+                            Type = "Expense"
+                        },
+                        new
+                        {
+                            Id = 4L,
+                            Color = "#EF4444",
+                            Icon = "💡",
+                            IsSystemDefault = true,
+                            Name = "Servicios",
+                            Type = "Expense"
+                        },
+                        new
+                        {
+                            Id = 5L,
+                            Color = "#EC4899",
+                            Icon = "⚕️",
+                            IsSystemDefault = true,
+                            Name = "Salud",
+                            Type = "Expense"
+                        },
+                        new
+                        {
+                            Id = 6L,
+                            Color = "#8B5CF6",
+                            Icon = "🎬",
+                            IsSystemDefault = true,
+                            Name = "Entretenimiento",
+                            Type = "Expense"
+                        },
+                        new
+                        {
+                            Id = 7L,
+                            Color = "#06B6D4",
+                            Icon = "📚",
+                            IsSystemDefault = true,
+                            Name = "Educación",
+                            Type = "Expense"
+                        },
+                        new
+                        {
+                            Id = 8L,
+                            Color = "#F97316",
+                            Icon = "👕",
+                            IsSystemDefault = true,
+                            Name = "Ropa",
+                            Type = "Expense"
+                        },
+                        new
+                        {
+                            Id = 9L,
+                            Color = "#6366F1",
+                            Icon = "💻",
+                            IsSystemDefault = true,
+                            Name = "Tecnología",
+                            Type = "Expense"
+                        },
+                        new
+                        {
+                            Id = 10L,
+                            Color = "#A855F7",
+                            Icon = "🐶",
+                            IsSystemDefault = true,
+                            Name = "Mascotas",
+                            Type = "Expense"
+                        },
+                        new
+                        {
+                            Id = 11L,
+                            Color = "#EC4899",
+                            Icon = "🎁",
+                            IsSystemDefault = true,
+                            Name = "Regalos",
+                            Type = "Expense"
+                        },
+                        new
+                        {
+                            Id = 12L,
+                            Color = "#64748B",
+                            Icon = "💸",
+                            IsSystemDefault = true,
+                            Name = "Otros Gastos",
+                            Type = "Expense"
+                        },
+                        new
+                        {
+                            Id = 13L,
+                            Color = "#10B981",
+                            Icon = "💰",
+                            IsSystemDefault = true,
+                            Name = "Salario",
+                            Type = "Income"
+                        },
+                        new
+                        {
+                            Id = 14L,
+                            Color = "#3B82F6",
+                            Icon = "💼",
+                            IsSystemDefault = true,
+                            Name = "Freelance",
+                            Type = "Income"
+                        },
+                        new
+                        {
+                            Id = 15L,
+                            Color = "#8B5CF6",
+                            Icon = "📈",
+                            IsSystemDefault = true,
+                            Name = "Inversiones",
+                            Type = "Income"
+                        },
+                        new
+                        {
+                            Id = 16L,
+                            Color = "#F59E0B",
+                            Icon = "🎉",
+                            IsSystemDefault = true,
+                            Name = "Bonus",
+                            Type = "Income"
+                        },
+                        new
+                        {
+                            Id = 17L,
+                            Color = "#06B6D4",
+                            Icon = "🏷️",
+                            IsSystemDefault = true,
+                            Name = "Venta",
+                            Type = "Income"
+                        },
+                        new
+                        {
+                            Id = 18L,
+                            Color = "#10B981",
+                            Icon = "💵",
+                            IsSystemDefault = true,
+                            Name = "Otros Ingresos",
+                            Type = "Income"
+                        });
+                });
+
+            modelBuilder.Entity("JuliGastos.Domain.Models.RefreshToken", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<DateTimeOffset>("ExpiresAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("expires_at");
+
+                    b.Property<string>("IpAddress")
+                        .IsRequired()
+                        .HasMaxLength(45)
+                        .HasColumnType("character varying(45)")
+                        .HasColumnName("ip_address");
+
+                    b.Property<bool>("IsRevoked")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false)
+                        .HasColumnName("is_revoked");
+
+                    b.Property<string>("ReplacedByToken")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("replaced_by_token");
+
+                    b.Property<DateTimeOffset?>("RevokedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("revoked_at");
+
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("token");
+
+                    b.Property<string>("UserAgent")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("user_agent");
+
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ExpiresAt");
+
+                    b.HasIndex("Token")
+                        .IsUnique();
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("refresh_tokens", (string)null);
                 });
 
             modelBuilder.Entity("JuliGastos.Domain.Models.Transaction", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .HasColumnType("bigint")
+                        .HasColumnName("id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
-                    b.Property<long>("AccountId")
-                        .HasColumnType("bigint");
+                    b.Property<Guid>("AccountId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("account_id");
 
                     b.Property<decimal>("Amount")
-                        .HasColumnType("numeric");
+                        .HasPrecision(19, 4)
+                        .HasColumnType("numeric(19,4)")
+                        .HasColumnName("amount");
+
+                    b.Property<long>("CategoryId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("category_id");
 
                     b.Property<DateTimeOffset>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.Property<DateTimeOffset>("Date")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("date");
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasDefaultValue("")
+                        .HasColumnName("description");
 
-                    b.Property<long>("DestinationAccountId")
-                        .HasColumnType("bigint");
+                    b.Property<long?>("DestinationAccountId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("destination_account_id");
 
                     b.Property<bool>("IsRecurring")
-                        .HasColumnType("boolean");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false)
+                        .HasColumnName("is_recurring");
 
-                    b.Property<int>("NecessityLevel")
-                        .HasColumnType("integer");
+                    b.Property<string>("NecessityLevel")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("necessity_level");
 
-                    b.Property<int>("Type")
-                        .HasColumnType("integer");
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("type");
 
                     b.Property<long>("UserId")
-                        .HasColumnType("bigint");
+                        .HasColumnType("bigint")
+                        .HasColumnName("user_id");
+
+                    b.Property<Guid>("Uuid")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("uuid")
+                        .HasDefaultValueSql("gen_random_uuid()");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Transactions");
+                    b.HasIndex("AccountId");
+
+                    b.HasIndex("CategoryId");
+
+                    b.HasIndex("Date");
+
+                    b.HasIndex("DestinationAccountId");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("Uuid")
+                        .IsUnique();
+
+                    b.ToTable("transactions", (string)null);
                 });
 
             modelBuilder.Entity("JuliGastos.Domain.Models.User", b =>
@@ -200,7 +533,7 @@ namespace JuliGastos.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
                         .HasColumnName("uuid")
-                        .HasDefaultValueSql("uuid_generate_v4()");
+                        .HasDefaultValueSql("gen_random_uuid()");
 
                     b.HasKey("Id");
 
@@ -211,6 +544,67 @@ namespace JuliGastos.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("users", (string)null);
+                });
+
+            modelBuilder.Entity("JuliGastos.Domain.Models.Account", b =>
+                {
+                    b.HasOne("JuliGastos.Domain.Models.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("JuliGastos.Domain.Models.Category", b =>
+                {
+                    b.HasOne("JuliGastos.Domain.Models.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("JuliGastos.Domain.Models.RefreshToken", b =>
+                {
+                    b.HasOne("JuliGastos.Domain.Models.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("JuliGastos.Domain.Models.Transaction", b =>
+                {
+                    b.HasOne("JuliGastos.Domain.Models.Account", "Account")
+                        .WithMany()
+                        .HasForeignKey("AccountId")
+                        .HasPrincipalKey("Uuid")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("JuliGastos.Domain.Models.Category", "Category")
+                        .WithMany()
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("JuliGastos.Domain.Models.Account", "DestinationAccount")
+                        .WithMany()
+                        .HasForeignKey("DestinationAccountId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("JuliGastos.Domain.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Account");
+
+                    b.Navigation("Category");
+
+                    b.Navigation("DestinationAccount");
+
+                    b.Navigation("User");
                 });
 #pragma warning restore 612, 618
         }

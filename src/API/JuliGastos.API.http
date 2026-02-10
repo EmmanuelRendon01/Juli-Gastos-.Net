@@ -1,6 +1,93 @@
 @JuliGastos.API_HostAddress = http://localhost:5116
+@token = your-jwt-token-here
 
 GET {{JuliGastos.API_HostAddress}}/weatherforecast/
 Accept: application/json
+
+###
+
+# Auth Endpoints
+
+### Register User
+POST {{JuliGastos.API_HostAddress}}/api/auth/register
+Content-Type: application/json
+
+{
+  "email": "test@example.com",
+  "password": "password123",
+  "fullName": "Test User",
+  "currencyCode": "COP",
+  "emergencyFundMonths": 3
+}
+
+###
+
+### Login User
+POST {{JuliGastos.API_HostAddress}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "test@example.com",
+  "password": "password123"
+}
+
+###
+
+# Account Endpoints
+
+### Create Account - Efectivo
+POST {{JuliGastos.API_HostAddress}}/api/accounts
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "Efectivo Principal",
+  "type": "Cash",
+  "currencyCode": "COP",
+  "initialBalance": 500000,
+  "monthlyMaintenanceFee": 0
+}
+
+###
+
+### Create Account - Bancolombia Ahorros
+POST {{JuliGastos.API_HostAddress}}/api/accounts
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "Bancolombia Ahorros",
+  "type": "Savings",
+  "currencyCode": "COP",
+  "initialBalance": 2000000,
+  "monthlyMaintenanceFee": 12000
+}
+
+###
+
+### Create Account - Tarjeta de Crédito
+POST {{JuliGastos.API_HostAddress}}/api/accounts
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "Visa Oro",
+  "type": "CreditCard",
+  "currencyCode": "COP",
+  "initialBalance": 0,
+  "monthlyMaintenanceFee": 25000
+}
+
+###
+
+### Get All Accounts
+GET {{JuliGastos.API_HostAddress}}/api/accounts
+Authorization: Bearer {{token}}
+
+###
+
+### Get Account By UUID (replace with actual UUID from create response)
+GET {{JuliGastos.API_HostAddress}}/api/accounts/00000000-0000-0000-0000-000000000000
+Authorization: Bearer {{token}}
 
 ###
