@@ -1,9 +1,10 @@
+using JuliGastos.Application.Interfaces.Handlers.Account;
 using JuliGastos.Application.Interfaces.Repositories;
 using JuliGastos.Domain.Exceptions;
 
 namespace JuliGastos.Application.UseCases.Account.Create;
 
-public class CreateAccountHandler
+public class CreateAccountHandler : ICreateAccountHandler
 {
     private readonly IAccountRepository _accountRepository;
 

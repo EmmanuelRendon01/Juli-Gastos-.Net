@@ -1,9 +1,11 @@
 using JuliGastos.Domain.Enums;
+
 namespace JuliGastos.Application.UseCases.Transaction.Expense;
 
-public class ExpenseResponse(
+public record ExpenseResponse(
+    Guid TransactionUuid,
     TransactionType Type,
-    decimal  Amount,
+    decimal Amount,
     DateTimeOffset Date,
     string Description
 );

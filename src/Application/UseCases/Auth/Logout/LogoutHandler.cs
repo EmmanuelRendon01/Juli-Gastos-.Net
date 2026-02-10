@@ -1,9 +1,10 @@
+using JuliGastos.Application.Interfaces.Handlers.Auth;
 using JuliGastos.Application.Interfaces.Repositories;
 using JuliGastos.Domain.Exceptions;
 
 namespace JuliGastos.Application.UseCases.Auth.Logout;
 
-public class LogoutHandler
+public class LogoutHandler : ILogoutHandler
 {
     private readonly IRefreshTokenRepository _refreshTokenRepository;
 

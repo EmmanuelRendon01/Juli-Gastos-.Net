@@ -1,3 +1,4 @@
+using JuliGastos.Application.Interfaces.Handlers.Auth;
 using JuliGastos.Application.Interfaces.Repositories;
 using JuliGastos.Application.Interfaces.Services;
 using JuliGastos.Domain.Exceptions;
@@ -5,7 +6,7 @@ using JuliGastos.Domain.Models;
 
 namespace JuliGastos.Application.UseCases.Auth.Refresh;
 
-public class RefreshHandler
+public class RefreshHandler : IRefreshHandler
 {
     private readonly IRefreshTokenRepository _refreshTokenRepository;
     private readonly IUserRepository _userRepository;

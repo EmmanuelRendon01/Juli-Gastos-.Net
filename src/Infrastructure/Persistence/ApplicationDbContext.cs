@@ -197,5 +197,180 @@ public class ApplicationDbContext : DbContext
             entity.HasIndex(e => e.UserId);
             entity.HasIndex(e => e.ExpiresAt);
         });
+
+        // Configuración de Category
+        modelBuilder.Entity<Category>(entity =>
+        {
+            entity.ToTable("categories");
+            
+            entity.HasKey(e => e.Id);
+            
+            entity.Property(e => e.Id)
+                .HasColumnName("id")
+                .ValueGeneratedOnAdd();
+            
+            entity.Property(e => e.UserId)
+                .HasColumnName("user_id")
+                .IsRequired(false); // NULL para categorías del sistema
+            
+            entity.Property(e => e.Name)
+                .HasColumnName("name")
+                .HasMaxLength(100)
+                .IsRequired();
+            
+            entity.Property(e => e.Icon)
+                .HasColumnName("icon")
+                .HasMaxLength(50)
+                .HasDefaultValue("💰");
+            
+            entity.Property(e => e.Color)
+                .HasColumnName("color")
+                .HasMaxLength(7)
+                .HasDefaultValue("#6366F1");
+            
+            entity.Property(e => e.Type)
+                .HasColumnName("type")
+                .HasConversion<string>()
+                .IsRequired();
+            
+            entity.Property(e => e.IsSystemDefault)
+                .HasColumnName("is_system_default")
+                .HasDefaultValue(false);
+            
+            // FK a User (solo para categorías de usuario)
+            entity.HasOne<User>()
+                .WithMany()
+                .HasForeignKey(e => e.UserId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .IsRequired(false);
+            
+            // Índices
+            entity.HasIndex(e => e.UserId);
+            entity.HasIndex(e => new { e.UserId, e.Name }).IsUnique();
+            
+            // Seed Data - Categorías predeterminadas del sistema (UserId = NULL)
+            entity.HasData(
+                // Categorías de Gastos
+                new Category { Id = 1, UserId = null, Name = "Alimentación", Icon = "🍔", Color = "#10B981", Type = Domain.Enums.TransactionType.Expense, IsSystemDefault = true },
+                new Category { Id = 2, UserId = null, Name = "Transporte", Icon = "🚗", Color = "#3B82F6", Type = Domain.Enums.TransactionType.Expense, IsSystemDefault = true },
+                new Category { Id = 3, UserId = null, Name = "Vivienda", Icon = "🏠", Color = "#F59E0B", Type = Domain.Enums.TransactionType.Expense, IsSystemDefault = true },
+                new Category { Id = 4, UserId = null, Name = "Servicios", Icon = "💡", Color = "#EF4444", Type = Domain.Enums.TransactionType.Expense, IsSystemDefault = true },
+                new Category { Id = 5, UserId = null, Name = "Salud", Icon = "⚕️", Color = "#EC4899", Type = Domain.Enums.TransactionType.Expense, IsSystemDefault = true },
+                new Category { Id = 6, UserId = null, Name = "Entretenimiento", Icon = "🎬", Color = "#8B5CF6", Type = Domain.Enums.TransactionType.Expense, IsSystemDefault = true },
+                new Category { Id = 7, UserId = null, Name = "Educación", Icon = "📚", Color = "#06B6D4", Type = Domain.Enums.TransactionType.Expense, IsSystemDefault = true },
+                new Category { Id = 8, UserId = null, Name = "Ropa", Icon = "👕", Color = "#F97316", Type = Domain.Enums.TransactionType.Expense, IsSystemDefault = true },
+                new Category { Id = 9, UserId = null, Name = "Tecnología", Icon = "💻", Color = "#6366F1", Type = Domain.Enums.TransactionType.Expense, IsSystemDefault = true },
+                new Category { Id = 10, UserId = null, Name = "Mascotas", Icon = "🐶", Color = "#A855F7", Type = Domain.Enums.TransactionType.Expense, IsSystemDefault = true },
+                new Category { Id = 11, UserId = null, Name = "Regalos", Icon = "🎁", Color = "#EC4899", Type = Domain.Enums.TransactionType.Expense, IsSystemDefault = true },
+                new Category { Id = 12, UserId = null, Name = "Otros Gastos", Icon = "💸", Color = "#64748B", Type = Domain.Enums.TransactionType.Expense, IsSystemDefault = true },
+                
+                // Categorías de Ingresos
+                new Category { Id = 13, UserId = null, Name = "Salario", Icon = "💰", Color = "#10B981", Type = Domain.Enums.TransactionType.Income, IsSystemDefault = true },
+                new Category { Id = 14, UserId = null, Name = "Freelance", Icon = "💼", Color = "#3B82F6", Type = Domain.Enums.TransactionType.Income, IsSystemDefault = true },
+                new Category { Id = 15, UserId = null, Name = "Inversiones", Icon = "📈", Color = "#8B5CF6", Type = Domain.Enums.TransactionType.Income, IsSystemDefault = true },
+                new Category { Id = 16, UserId = null, Name = "Bonus", Icon = "🎉", Color = "#F59E0B", Type = Domain.Enums.TransactionType.Income, IsSystemDefault = true },
+                new Category { Id = 17, UserId = null, Name = "Venta", Icon = "🏷️", Color = "#06B6D4", Type = Domain.Enums.TransactionType.Income, IsSystemDefault = true },
+                new Category { Id = 18, UserId = null, Name = "Otros Ingresos", Icon = "💵", Color = "#10B981", Type = Domain.Enums.TransactionType.Income, IsSystemDefault = true }
+            );
+        });
+        
+        // Configuración de Transaction
+        modelBuilder.Entity<Transaction>(entity =>
+        {
+            entity.ToTable("transactions");
+            
+            entity.HasKey(e => e.Id);
+            
+            entity.Property(e => e.Id)
+                .HasColumnName("id")
+                .ValueGeneratedOnAdd();
+            
+            entity.Property(e => e.Uuid)
+                .HasColumnName("uuid")
+                .IsRequired()
+                .HasDefaultValueSql("gen_random_uuid()");
+            
+            entity.Property(e => e.UserId)
+                .HasColumnName("user_id")
+                .IsRequired();
+            
+            entity.Property(e => e.AccountId)
+                .HasColumnName("account_id")
+                .IsRequired();
+            
+            entity.Property(e => e.CategoryId)
+                .HasColumnName("category_id")
+                .IsRequired();
+            
+            entity.Property(e => e.Type)
+                .HasColumnName("type")
+                .HasConversion<string>()
+                .IsRequired();
+            
+            entity.Property(e => e.Amount)
+                .HasColumnName("amount")
+                .HasPrecision(19, 4)
+                .IsRequired();
+            
+            entity.Property(e => e.Date)
+                .HasColumnName("date")
+                .IsRequired();
+            
+            entity.Property(e => e.Description)
+                .HasColumnName("description")
+                .HasMaxLength(500)
+                .HasDefaultValue(string.Empty);
+            
+            entity.Property(e => e.NecessityLevel)
+                .HasColumnName("necessity_level")
+                .HasConversion<string>()
+                .IsRequired();
+            
+            entity.Property(e => e.DestinationAccountId)
+                .HasColumnName("destination_account_id")
+                .IsRequired(false);
+            
+            entity.Property(e => e.IsRecurring)
+                .HasColumnName("is_recurring")
+                .HasDefaultValue(false);
+            
+            entity.Property(e => e.CreatedAt)
+                .HasColumnName("created_at")
+                .HasDefaultValueSql("CURRENT_TIMESTAMP");
+            
+            // FK a User
+            entity.HasOne(e => e.User)
+                .WithMany()
+                .HasForeignKey(e => e.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+            
+            // FK a Account (por Guid, no por Id)
+            entity.HasOne(e => e.Account)
+                .WithMany()
+                .HasForeignKey(e => e.AccountId)
+                .HasPrincipalKey(a => a.Uuid)
+                .OnDelete(DeleteBehavior.Restrict);
+            
+            // FK a Category
+            entity.HasOne(e => e.Category)
+                .WithMany()
+                .HasForeignKey(e => e.CategoryId)
+                .OnDelete(DeleteBehavior.Restrict);
+            
+            // FK a DestinationAccount (opcional, para transferencias)
+            entity.HasOne(e => e.DestinationAccount)
+                .WithMany()
+                .HasForeignKey(e => e.DestinationAccountId)
+                .HasPrincipalKey(a => a.Id)
+                .OnDelete(DeleteBehavior.Restrict)
+                .IsRequired(false);
+            
+            // Índices
+            entity.HasIndex(e => e.Uuid).IsUnique();
+            entity.HasIndex(e => e.UserId);
+            entity.HasIndex(e => e.AccountId);
+            entity.HasIndex(e => e.CategoryId);
+            entity.HasIndex(e => e.Date);
+        });
     }
 }

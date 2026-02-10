@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using JuliGastos.Application.Interfaces.Handlers.Account;
 using JuliGastos.Application.UseCases.Account.Create;
 using JuliGastos.Application.UseCases.Account.GetAll;
 using JuliGastos.Application.UseCases.Account.GetById;
@@ -11,14 +12,14 @@ namespace JuliGastos.API.Controllers;
 [Authorize]
 public class AccountsController : BaseApiController
 {
-    private readonly CreateAccountHandler _createAccountHandler;
-    private readonly GetAllAccountsHandler _getAllAccountsHandler;
-    private readonly GetAccountByIdHandler _getAccountByIdHandler;
+    private readonly ICreateAccountHandler _createAccountHandler;
+    private readonly IGetAllAccountsHandler _getAllAccountsHandler;
+    private readonly IGetAccountByIdHandler _getAccountByIdHandler;
 
     public AccountsController(
-        CreateAccountHandler createAccountHandler,
-        GetAllAccountsHandler getAllAccountsHandler,
-        GetAccountByIdHandler getAccountByIdHandler)
+        ICreateAccountHandler createAccountHandler,
+        IGetAllAccountsHandler getAllAccountsHandler,
+        IGetAccountByIdHandler getAccountByIdHandler)
     {
         _createAccountHandler = createAccountHandler;
         _getAllAccountsHandler = getAllAccountsHandler;

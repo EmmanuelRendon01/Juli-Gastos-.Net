@@ -1,3 +1,4 @@
+using JuliGastos.Application.Interfaces.Handlers.Auth;
 using JuliGastos.Application.UseCases.Auth.Login;
 using JuliGastos.Application.UseCases.Auth.Logout;
 using JuliGastos.Application.UseCases.Auth.Refresh;
@@ -8,17 +9,17 @@ namespace JuliGastos.API.Controllers;
 
 public class AuthController : BaseApiController
 {
-    private readonly RegisterHandler _registerHandler;
-    private readonly LoginHandler _loginHandler;
-    private readonly RefreshHandler _refreshHandler;
-    private readonly LogoutHandler _logoutHandler;
+    private readonly IRegisterHandler _registerHandler;
+    private readonly ILoginHandler _loginHandler;
+    private readonly IRefreshHandler _refreshHandler;
+    private readonly ILogoutHandler _logoutHandler;
     private readonly IConfiguration _configuration;
 
     public AuthController(
-        RegisterHandler registerHandler,
-        LoginHandler loginHandler,
-        RefreshHandler refreshHandler,
-        LogoutHandler logoutHandler,
+        IRegisterHandler registerHandler,
+        ILoginHandler loginHandler,
+        IRefreshHandler refreshHandler,
+        ILogoutHandler logoutHandler,
         IConfiguration configuration)
     {
         _registerHandler = registerHandler;

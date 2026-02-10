@@ -1,10 +1,11 @@
+using JuliGastos.Application.Interfaces.Handlers.Account;
 using JuliGastos.Application.Interfaces.Repositories;
 using JuliGastos.Application.UseCases.Account.GetAll;
 using JuliGastos.Domain.Exceptions;
 
 namespace JuliGastos.Application.UseCases.Account.GetById;
 
-public class GetAccountByIdHandler
+public class GetAccountByIdHandler : IGetAccountByIdHandler
 {
     private readonly IAccountRepository _accountRepository;
 

@@ -13,7 +13,13 @@ using Microsoft.OpenApi.Models;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        // Serializar enums como strings en lugar de números
+        options.JsonSerializerOptions.Converters.Add(
+            new System.Text.Json.Serialization.JsonStringEnumConverter());
+    });
 
 // CORS - Configuración para permitir cookies desde el frontend
 builder.Services.AddCors(options =>
@@ -116,6 +122,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
 
 // Services
 builder.Services.AddScoped<IPasswordHasher, BcryptPasswordHasher>();
@@ -125,15 +132,18 @@ builder.Services.AddScoped<ITokenService, JwtTokenService>();
 builder.Services.AddHostedService<RefreshTokenCleanupService>();
 
 // UseCases/Handlers - Auth
-builder.Services.AddScoped<JuliGastos.Application.UseCases.Auth.Register.RegisterHandler>();
-builder.Services.AddScoped<JuliGastos.Application.UseCases.Auth.Login.LoginHandler>();
-builder.Services.AddScoped<JuliGastos.Application.UseCases.Auth.Refresh.RefreshHandler>();
-builder.Services.AddScoped<JuliGastos.Application.UseCases.Auth.Logout.LogoutHandler>();
+builder.Services.AddScoped<JuliGastos.Application.Interfaces.Handlers.Auth.IRegisterHandler, JuliGastos.Application.UseCases.Auth.Register.RegisterHandler>();
+builder.Services.AddScoped<JuliGastos.Application.Interfaces.Handlers.Auth.ILoginHandler, JuliGastos.Application.UseCases.Auth.Login.LoginHandler>();
+builder.Services.AddScoped<JuliGastos.Application.Interfaces.Handlers.Auth.IRefreshHandler, JuliGastos.Application.UseCases.Auth.Refresh.RefreshHandler>();
+builder.Services.AddScoped<JuliGastos.Application.Interfaces.Handlers.Auth.ILogoutHandler, JuliGastos.Application.UseCases.Auth.Logout.LogoutHandler>();
 
 // UseCases/Handlers - Account
-builder.Services.AddScoped<JuliGastos.Application.UseCases.Account.Create.CreateAccountHandler>();
-builder.Services.AddScoped<JuliGastos.Application.UseCases.Account.GetAll.GetAllAccountsHandler>();
-builder.Services.AddScoped<JuliGastos.Application.UseCases.Account.GetById.GetAccountByIdHandler>();
+builder.Services.AddScoped<JuliGastos.Application.Interfaces.Handlers.Account.ICreateAccountHandler, JuliGastos.Application.UseCases.Account.Create.CreateAccountHandler>();
+builder.Services.AddScoped<JuliGastos.Application.Interfaces.Handlers.Account.IGetAllAccountsHandler, JuliGastos.Application.UseCases.Account.GetAll.GetAllAccountsHandler>();
+builder.Services.AddScoped<JuliGastos.Application.Interfaces.Handlers.Account.IGetAccountByIdHandler, JuliGastos.Application.UseCases.Account.GetById.GetAccountByIdHandler>();
+
+// UseCases/Handlers - Transaction
+builder.Services.AddScoped<JuliGastos.Application.Interfaces.Handlers.Transaction.IExpenseHandler, JuliGastos.Application.UseCases.Transaction.Expense.ExpenseHandler>();
 
 var app = builder.Build();
 

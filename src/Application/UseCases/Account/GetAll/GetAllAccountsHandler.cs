@@ -1,8 +1,9 @@
+using JuliGastos.Application.Interfaces.Handlers.Account;
 using JuliGastos.Application.Interfaces.Repositories;
 
 namespace JuliGastos.Application.UseCases.Account.GetAll;
 
-public class GetAllAccountsHandler
+public class GetAllAccountsHandler : IGetAllAccountsHandler
 {
     private readonly IAccountRepository _accountRepository;
 
@@ -11,7 +12,7 @@ public class GetAllAccountsHandler
         _accountRepository = accountRepository;
     }
 
-    public async Task<GetAllAccountsResponse> Handle(long userId, CancellationToken cancellationToken = default)
+    public async Task<GetAllAccountsResponse> Handle(long userId)
     {
         // 1. Obtener todas las cuentas del usuario
         var accounts = await _accountRepository.GetAllByUserIdAsync(userId);
