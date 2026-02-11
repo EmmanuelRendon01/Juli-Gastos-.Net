@@ -14,10 +14,8 @@ public class GetAllAccountsHandler : IGetAllAccountsHandler
 
     public async Task<GetAllAccountsResponse> Handle(long userId)
     {
-        // 1. Obtener todas las cuentas del usuario
         var accounts = await _accountRepository.GetAllByUserIdAsync(userId);
-
-        // 2. Mapear a DTOs
+        
         var accountDtos = accounts
             .OrderByDescending(a => a.CreatedAt)
             .Select(a => new AccountDto(
@@ -31,8 +29,7 @@ public class GetAllAccountsHandler : IGetAllAccountsHandler
                 a.CreatedAt
             ))
             .ToList();
-
-        // 3. Retornar respuesta
+        
         return new GetAllAccountsResponse(accountDtos, accountDtos.Count);
     }
 }
