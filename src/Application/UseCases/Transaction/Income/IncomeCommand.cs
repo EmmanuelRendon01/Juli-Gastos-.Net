@@ -1,12 +1,13 @@
-namespace JuliGastos.Application.UseCases.Transaction.Expense;
+﻿namespace JuliGastos.Application.UseCases.Transaction.Income;
 
-public record ExpenseCommand(
+public record IncomeCommand
+(
     Guid AccountId,
     long CategoryId,
     decimal Amount,
     DateTime Date,
     string Description,
     bool IsRecurring
-    
 );
-
+    
+        

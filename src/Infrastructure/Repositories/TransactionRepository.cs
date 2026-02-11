@@ -29,9 +29,11 @@ public class TransactionRepository : ITransactionRepository
         return transaction;
     }
 
-    public Task<Transaction> IncomeAsync(Transaction transaction, Account account, long userId)
+    public async Task<Transaction> IncomeAsync(Transaction transaction, Account account, long userId)
     {
-        throw new NotImplementedException();
+        _context.Transactions.Add(transaction);
+        await _context.SaveChangesAsync();
+        return transaction;
     }
 
     public Task<Transaction> TransferAsync(Transaction transaction, Account account, long userId)
