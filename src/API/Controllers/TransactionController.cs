@@ -22,7 +22,7 @@ public class TransactionController : BaseApiController
         _incomeHandler = incomeHandler;
     }
 
-    [HttpPost]
+    [HttpPost("expense")]
     public async Task<ActionResult<ExpenseResponse>> ExpenseAsync([FromBody] ExpenseCommand command)
     {
         try
@@ -37,7 +37,7 @@ public class TransactionController : BaseApiController
         }
     }
     
-    [HttpPost]
+    [HttpPost("income")]
     public async Task<ActionResult<IncomeResponse>> IncomeAsync([FromBody] IncomeCommand command)
     {
         try
