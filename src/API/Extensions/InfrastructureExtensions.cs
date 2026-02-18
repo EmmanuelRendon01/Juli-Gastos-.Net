@@ -28,12 +28,18 @@ public static class InfrastructureExtensions
         // 2. Repositories (Data Access Layer)
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IAccountRepository, AccountRepository>();
+        services.AddScoped<ICategoryRepository, CategoryRepository>();
         services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
         services.AddScoped<ITransactionRepository, TransactionRepository>();
+        services.AddScoped<ISavingPlanRepository, SavingPlanRepository>();
+        services.AddScoped<ISavingPlanAccountRepository, SavingPlanAccountRepository>();
+        services.AddScoped<IFinancialCommitmentRepository, FinancialCommitmentRepository>();
+        services.AddScoped<IRecurringIncomeRepository, RecurringIncomeRepository>();
 
         // 3. Domain Services
         services.AddScoped<IPasswordHasher, BcryptPasswordHasher>();
         services.AddScoped<ITokenService, JwtTokenService>();
+        services.AddScoped<ISavingCalculationService, SavingCalculationService>();
 
         // 4. Background Services (Hosted Services)
         services.AddHostedService<RefreshTokenCleanupService>();

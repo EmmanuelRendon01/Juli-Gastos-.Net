@@ -129,7 +129,7 @@ docker-compose.override.yml
 # Documentation (Markdown files)
 *.md
 !README.md
-!AGENTS.md
+AGENTS.md
 
 # OpenCode Configuration (contains API keys)
 opencode.json

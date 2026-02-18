@@ -8,6 +8,25 @@ using JuliGastos.Application.UseCases.Auth.Login;
 using JuliGastos.Application.UseCases.Auth.Logout;
 using JuliGastos.Application.UseCases.Auth.Refresh;
 using JuliGastos.Application.UseCases.Auth.Register;
+using JuliGastos.Application.UseCases.FinancialCommitment.Create;
+using JuliGastos.Application.UseCases.FinancialCommitment.Delete;
+using JuliGastos.Application.UseCases.FinancialCommitment.GetAll;
+using JuliGastos.Application.UseCases.FinancialCommitment.GetById;
+using JuliGastos.Application.UseCases.FinancialCommitment.Update;
+using JuliGastos.Application.UseCases.RecurringIncome.Create;
+using JuliGastos.Application.UseCases.RecurringIncome.Delete;
+using JuliGastos.Application.UseCases.RecurringIncome.GetAll;
+using JuliGastos.Application.UseCases.RecurringIncome.GetById;
+using JuliGastos.Application.UseCases.RecurringIncome.Update;
+using JuliGastos.Application.UseCases.SavingPlan.Create;
+using JuliGastos.Application.UseCases.SavingPlan.Delete;
+using JuliGastos.Application.UseCases.SavingPlan.GetAll;
+using JuliGastos.Application.UseCases.SavingPlan.GetById;
+using JuliGastos.Application.UseCases.SavingPlan.GetDashboard;
+using JuliGastos.Application.UseCases.SavingPlan.GetProjection;
+using JuliGastos.Application.UseCases.SavingPlan.Update;
+using JuliGastos.Application.UseCases.SavingPlan.UpdateAccounts;
+using JuliGastos.Application.UseCases.SavingPlan.UpdateStatus;
 using JuliGastos.Application.UseCases.Transaction.Expense;
 using JuliGastos.Application.UseCases.Transaction.Income;
 
@@ -38,6 +57,31 @@ public static class ApplicationExtensions
         // Transaction Handlers - Income and expense tracking
         services.AddScoped<IExpenseHandler, ExpenseHandler>();
         services.AddScoped<IIncomeHandler, IncomeHandler>();
+
+        // Financial Commitment Handlers - Fixed expenses management
+        services.AddScoped<CreateFinancialCommitmentHandler>();
+        services.AddScoped<GetAllFinancialCommitmentsHandler>();
+        services.AddScoped<GetFinancialCommitmentByIdHandler>();
+        services.AddScoped<UpdateFinancialCommitmentHandler>();
+        services.AddScoped<DeleteFinancialCommitmentHandler>();
+
+        // Recurring Income Handlers - Regular income sources
+        services.AddScoped<CreateRecurringIncomeHandler>();
+        services.AddScoped<GetAllRecurringIncomesHandler>();
+        services.AddScoped<GetRecurringIncomeByIdHandler>();
+        services.AddScoped<UpdateRecurringIncomeHandler>();
+        services.AddScoped<DeleteRecurringIncomeHandler>();
+
+        // Saving Plan Handlers - Savings goals and projections
+        services.AddScoped<CreateSavingPlanHandler>();
+        services.AddScoped<GetAllSavingPlansHandler>();
+        services.AddScoped<GetSavingPlanByIdHandler>();
+        services.AddScoped<UpdateSavingPlanHandler>();
+        services.AddScoped<DeleteSavingPlanHandler>();
+        services.AddScoped<UpdateSavingPlanAccountsHandler>();
+        services.AddScoped<GetSavingPlanProjectionHandler>();
+        services.AddScoped<GetSavingPlansDashboardHandler>();
+        services.AddScoped<UpdateSavingPlanStatusHandler>();
 
         return services;
     }

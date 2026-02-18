@@ -16,6 +16,10 @@ public class ApplicationDbContext : DbContext
     public DbSet<Category> Categories => Set<Category>();
     public DbSet<Transaction> Transactions => Set<Transaction>();
     public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
+    public DbSet<SavingPlan> SavingPlans => Set<SavingPlan>();
+    public DbSet<SavingPlanAccount> SavingPlanAccounts => Set<SavingPlanAccount>();
+    public DbSet<FinancialCommitment> FinancialCommitments => Set<FinancialCommitment>();
+    public DbSet<RecurringIncome> RecurringIncomes => Set<RecurringIncome>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -371,6 +375,273 @@ public class ApplicationDbContext : DbContext
             entity.HasIndex(e => e.AccountId);
             entity.HasIndex(e => e.CategoryId);
             entity.HasIndex(e => e.Date);
+        });
+        
+        // Configuración de SavingPlan
+        modelBuilder.Entity<SavingPlan>(entity =>
+        {
+            entity.ToTable("saving_plans");
+            
+            entity.HasKey(e => e.Id);
+            
+            entity.Property(e => e.Id)
+                .HasColumnName("id")
+                .ValueGeneratedOnAdd();
+            
+            entity.Property(e => e.Uuid)
+                .HasColumnName("uuid")
+                .IsRequired()
+                .HasDefaultValueSql("gen_random_uuid()");
+            
+            entity.Property(e => e.UserId)
+                .HasColumnName("user_id")
+                .IsRequired();
+            
+            entity.Property(e => e.Name)
+                .HasColumnName("name")
+                .HasMaxLength(150)
+                .IsRequired();
+            
+            entity.Property(e => e.Description)
+                .HasColumnName("description")
+                .HasColumnType("text");
+            
+            entity.Property(e => e.TargetAmount)
+                .HasColumnName("target_amount")
+                .HasPrecision(19, 4)
+                .IsRequired();
+            
+            entity.Property(e => e.TargetDate)
+                .HasColumnName("target_date")
+                .IsRequired();
+            
+            entity.Property(e => e.Icon)
+                .HasColumnName("icon")
+                .HasMaxLength(10)
+                .HasDefaultValue("🎯");
+            
+            entity.Property(e => e.Color)
+                .HasColumnName("color")
+                .HasMaxLength(7)
+                .HasDefaultValue("#6366F1");
+            
+            entity.Property(e => e.Status)
+                .HasColumnName("status")
+                .HasConversion<string>()
+                .HasDefaultValue(Domain.Enums.SavingPlanStatus.Active);
+            
+            entity.Property(e => e.CreatedAt)
+                .HasColumnName("created_at")
+                .HasDefaultValueSql("CURRENT_TIMESTAMP");
+            
+            entity.Property(e => e.UpdatedAt)
+                .HasColumnName("updated_at")
+                .HasDefaultValueSql("CURRENT_TIMESTAMP");
+            
+            // FK a User
+            entity.HasOne(e => e.User)
+                .WithMany()
+                .HasForeignKey(e => e.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+            
+            // Índices
+            entity.HasIndex(e => e.Uuid).IsUnique();
+            entity.HasIndex(e => e.UserId);
+            entity.HasIndex(e => e.Status);
+        });
+        
+        // Configuración de SavingPlanAccount (Tabla intermedia M:N)
+        modelBuilder.Entity<SavingPlanAccount>(entity =>
+        {
+            entity.ToTable("saving_plan_accounts");
+            
+            entity.HasKey(e => e.Id);
+            
+            entity.Property(e => e.Id)
+                .HasColumnName("id")
+                .ValueGeneratedOnAdd();
+            
+            entity.Property(e => e.SavingPlanId)
+                .HasColumnName("saving_plan_id")
+                .IsRequired();
+            
+            entity.Property(e => e.AccountId)
+                .HasColumnName("account_id")
+                .IsRequired();
+            
+            entity.Property(e => e.CreatedAt)
+                .HasColumnName("created_at")
+                .HasDefaultValueSql("CURRENT_TIMESTAMP");
+            
+            // FK a SavingPlan
+            entity.HasOne(e => e.SavingPlan)
+                .WithMany(sp => sp.SavingPlanAccounts)
+                .HasForeignKey(e => e.SavingPlanId)
+                .OnDelete(DeleteBehavior.Cascade);
+            
+            // FK a Account
+            entity.HasOne(e => e.Account)
+                .WithMany()
+                .HasForeignKey(e => e.AccountId)
+                .OnDelete(DeleteBehavior.Cascade);
+            
+            // Índices y constraint de unicidad
+            entity.HasIndex(e => new { e.SavingPlanId, e.AccountId }).IsUnique();
+            entity.HasIndex(e => e.SavingPlanId);
+            entity.HasIndex(e => e.AccountId);
+        });
+        
+        // Configuración de FinancialCommitment
+        modelBuilder.Entity<FinancialCommitment>(entity =>
+        {
+            entity.ToTable("financial_commitments");
+            
+            entity.HasKey(e => e.Id);
+            
+            entity.Property(e => e.Id)
+                .HasColumnName("id")
+                .ValueGeneratedOnAdd();
+            
+            entity.Property(e => e.Uuid)
+                .HasColumnName("uuid")
+                .IsRequired()
+                .HasDefaultValueSql("gen_random_uuid()");
+            
+            entity.Property(e => e.UserId)
+                .HasColumnName("user_id")
+                .IsRequired();
+            
+            entity.Property(e => e.Name)
+                .HasColumnName("name")
+                .HasMaxLength(100)
+                .IsRequired();
+            
+            entity.Property(e => e.Amount)
+                .HasColumnName("amount")
+                .HasPrecision(19, 4)
+                .IsRequired();
+            
+            entity.Property(e => e.Frequency)
+                .HasColumnName("frequency")
+                .HasConversion<string>()
+                .IsRequired();
+            
+            entity.Property(e => e.CategoryId)
+                .HasColumnName("category_id");
+            
+            entity.Property(e => e.NextDueDate)
+                .HasColumnName("next_due_date");
+            
+            entity.Property(e => e.IsActive)
+                .HasColumnName("is_active")
+                .HasDefaultValue(true);
+            
+            entity.Property(e => e.Notes)
+                .HasColumnName("notes")
+                .HasColumnType("text");
+            
+            entity.Property(e => e.CreatedAt)
+                .HasColumnName("created_at")
+                .HasDefaultValueSql("CURRENT_TIMESTAMP");
+            
+            entity.Property(e => e.UpdatedAt)
+                .HasColumnName("updated_at")
+                .HasDefaultValueSql("CURRENT_TIMESTAMP");
+            
+            // FK a User
+            entity.HasOne(e => e.User)
+                .WithMany()
+                .HasForeignKey(e => e.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+            
+            // FK a Category (opcional)
+            entity.HasOne(e => e.Category)
+                .WithMany()
+                .HasForeignKey(e => e.CategoryId)
+                .OnDelete(DeleteBehavior.SetNull)
+                .IsRequired(false);
+            
+            // Índices
+            entity.HasIndex(e => e.Uuid).IsUnique();
+            entity.HasIndex(e => e.UserId);
+            entity.HasIndex(e => e.CategoryId);
+            entity.HasIndex(e => e.IsActive);
+        });
+        
+        // Configuración de RecurringIncome
+        modelBuilder.Entity<RecurringIncome>(entity =>
+        {
+            entity.ToTable("recurring_incomes");
+            
+            entity.HasKey(e => e.Id);
+            
+            entity.Property(e => e.Id)
+                .HasColumnName("id")
+                .ValueGeneratedOnAdd();
+            
+            entity.Property(e => e.Uuid)
+                .HasColumnName("uuid")
+                .IsRequired()
+                .HasDefaultValueSql("gen_random_uuid()");
+            
+            entity.Property(e => e.UserId)
+                .HasColumnName("user_id")
+                .IsRequired();
+            
+            entity.Property(e => e.Name)
+                .HasColumnName("name")
+                .HasMaxLength(100)
+                .IsRequired();
+            
+            entity.Property(e => e.Amount)
+                .HasColumnName("amount")
+                .HasPrecision(19, 4)
+                .IsRequired();
+            
+            entity.Property(e => e.Frequency)
+                .HasColumnName("frequency")
+                .HasConversion<string>()
+                .IsRequired();
+            
+            entity.Property(e => e.CategoryId)
+                .HasColumnName("category_id");
+            
+            entity.Property(e => e.NextExpectedDate)
+                .HasColumnName("next_expected_date");
+            
+            entity.Property(e => e.IsActive)
+                .HasColumnName("is_active")
+                .HasDefaultValue(true);
+            
+            entity.Property(e => e.Notes)
+                .HasColumnName("notes")
+                .HasColumnType("text");
+            
+            entity.Property(e => e.CreatedAt)
+                .HasColumnName("created_at")
+                .HasDefaultValueSql("CURRENT_TIMESTAMP");
+            
+            entity.Property(e => e.UpdatedAt)
+                .HasColumnName("updated_at")
+                .HasDefaultValueSql("CURRENT_TIMESTAMP");
+            
+            // FK a User
+            entity.HasOne(e => e.User)
+                .WithMany()
+                .HasForeignKey(e => e.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+            
+            // FK a Category (opcional)
+            entity.HasOne(e => e.Category)
+                .WithMany()
+                .HasForeignKey(e => e.CategoryId)
+                .OnDelete(DeleteBehavior.SetNull)
+                .IsRequired(false);
+            
+            // Índices
+            entity.HasIndex(e => e.Uuid).IsUnique();
+            entity.HasIndex(e => e.UserId);
+            entity.HasIndex(e => e.IsActive);
         });
     }
 }
