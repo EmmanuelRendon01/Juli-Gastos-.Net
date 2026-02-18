@@ -3,6 +3,7 @@ using System;
 using JuliGastos.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace JuliGastos.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260217160444_AddSavingPlansSystem")]
+    partial class AddSavingPlansSystem
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -340,12 +343,6 @@ namespace JuliGastos.Infrastructure.Migrations
                         .HasColumnName("created_at")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-                    b.Property<string>("Description")
-                        .HasColumnType("text");
-
-                    b.Property<DateTimeOffset?>("EndDate")
-                        .HasColumnType("timestamp with time zone");
-
                     b.Property<string>("Frequency")
                         .IsRequired()
                         .HasColumnType("text")
@@ -370,9 +367,6 @@ namespace JuliGastos.Infrastructure.Migrations
                     b.Property<string>("Notes")
                         .HasColumnType("text")
                         .HasColumnName("notes");
-
-                    b.Property<DateTimeOffset?>("StartDate")
-                        .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTimeOffset>("UpdatedAt")
                         .ValueGeneratedOnAdd()
@@ -428,12 +422,6 @@ namespace JuliGastos.Infrastructure.Migrations
                         .HasColumnName("created_at")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-                    b.Property<string>("Description")
-                        .HasColumnType("text");
-
-                    b.Property<DateTimeOffset?>("EndDate")
-                        .HasColumnType("timestamp with time zone");
-
                     b.Property<string>("Frequency")
                         .IsRequired()
                         .HasColumnType("text")
@@ -458,9 +446,6 @@ namespace JuliGastos.Infrastructure.Migrations
                     b.Property<string>("Notes")
                         .HasColumnType("text")
                         .HasColumnName("notes");
-
-                    b.Property<DateTimeOffset?>("StartDate")
-                        .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTimeOffset>("UpdatedAt")
                         .ValueGeneratedOnAdd()
@@ -663,9 +648,6 @@ namespace JuliGastos.Infrastructure.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-                    b.Property<DateTimeOffset>("LinkedAt")
-                        .HasColumnType("timestamp with time zone");
 
                     b.Property<long>("SavingPlanId")
                         .HasColumnType("bigint")
